@@ -1,101 +1,137 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
+#define MAX_PRODUCTS 100 // Maximum number of products
 
-void diplayMainMenu();
-int getOptionFromTheUser();
-int executeMainMenu(int);
-void addProduct();
-void displayProducts();
-void getProductDetails();
-
-struct Product
-{
+struct Product {
     int productId;
     char productName[100];
     float productPrice;
 };
 
-struct Product products [2];
+struct Product *products = NULL; // Pointer to dynamically allocated array
 int productId = 0;
 
-int main (){
+void displayMainMenu();
+int getOptionFromTheUser();
+int executeMainMenu(int);
+void addProduct();
+void displayProducts();
+void removeProduct();
+int findProduct(char[100]);
 
-    int exitFlaq = 0;
+int main() {
+    int exitFlag = 0;
 
-    while (!exitFlaq)
-    {
-      diplayMainMenu();
-      int option = getOptionFromTheUser();
-      exitFlaq = executeMainMenu(option);
+    while (!exitFlag) {
+        displayMainMenu();
+        int option = getOptionFromTheUser();
+        exitFlag = executeMainMenu(option);
     }
 
-    printf("\n Exiting the application...");
+    printf("\nExiting the application...");
+    free(products); // Free dynamically allocated memory
     return 0;
 }
 
-
-void diplayMainMenu(){
-    printf("\n 1. View all products");
-    printf("\n 2. Add a products");
-    printf("\n 3. Remove a product");
-    printf("\n 4. Update a products");
-    printf("\n 1. Generate product log");
-    printf("\n 0. Quit");
-    printf("\n Enter a option to proceed : ");
+void displayMainMenu() {
+    printf("\n1. View all products");
+    printf("\n2. Add a product");
+    printf("\n3. Remove Product");
+    printf("\n4. Update Product");
+    printf("\n0. Quit");
+    printf("\nEnter an option to proceed: ");
 }
 
-int getOptionFromTheUser(){
+int getOptionFromTheUser() {
     int option;
-    scanf("\n%d", &option);
+    scanf("%d", &option);
     return option;
 }
 
-int executeMainMenu(int option){
-    switch (option)
-    {
-    case 1:
-        displayProducts();
-    case 2:
-        addProduct();
-        break;
-    case 0:
-        return 1;
-    default:
-        break;
+int executeMainMenu(int option) {
+    switch (option) {
+        case 1:
+            displayProducts();
+            break;
+        case 2:
+            addProduct();
+            break;
+        case 3: 
+            removeProduct();
+            break;
+        case 4: 
+            break;
+        case 0:
+            return 1;
+        default:
+            printf("\nInvalid option. Please try again.");
+            break;
     }
     return 0;
 }
 
-void addProduct(){
-    productId ++;
+void addProduct() {
+    productId++;
     char productName[100];
     float productPrice;
     
-    printf("Enter Product Name : ");
+    printf("Enter Product Name: ");
     scanf("%s", productName);
     
     printf("Enter Product Price for %s: ", productName);
     scanf("%f", &productPrice);
     
-    products[productId].productId = productId;
-    strcpy( products[productId].productName, productName);
-    products[productId].productPrice = productPrice;
-
-    printf("The Product %s with Price %.2f has been successfully Added with ID : %d\n", productName, productPrice, productId);
-}
-
-void displayProducts(){
-
-    if(products == NULL){
-        printf("No Products were added yet");
+    if (products == NULL) {
+        products = (struct Product *)malloc(MAX_PRODUCTS * sizeof(struct Product));
+        if (products == NULL) {
+            printf("Memory allocation failed\n");
+            return;
+        }
+    } else if (productId >= MAX_PRODUCTS) {
+        printf("Maximum number of products reached\n");
         return;
     }
 
-    for(int i = 1; i<sizeof(products); i++){
-        printf("\n Product Id :%d",products[i].productId);
-        printf("\n Product Name : %s",products[i].productName );
-        printf("\n Product Price : %.2f", products[i].productPrice);
+    products[productId - 1].productId = productId;
+    strcpy(products[productId - 1].productName, productName);
+    products[productId - 1].productPrice = productPrice;
+
+    printf("The Product %s with Price %.2f has been successfully Added with ID: %d\n", productName, productPrice, productId);
+}
+
+void displayProducts() {
+    if (products == NULL || productId == 0) {
+        printf("No products were added yet\n");
+        return;
     }
 
+    printf("\nProducts:\n");
+    for (int i = 0; i < productId; i++) {
+        printf("\nProduct ID: %d", products[i].productId);
+        printf("\nProduct Name: %s", products[i].productName);
+        printf("\nProduct Price: %.2f\n", products[i].productPrice);
+    }
+}
+
+void removeProduct(){
+
+    char productName[100];
+    printf("Enter Product Name to remove: ");
+    scanf("%s", productName);
+    int pos = findProduct(productName);
+
+    for(int i=pos; i<sizeof(products); i++){
+        products[i] = products[i+1];
+    }
+}
+
+int findProduct(char productName[100]){
+    for(int i =0; i< productId; i++){
+        if(!strcmp(products[i].productName, productName)){
+            return i;
+        }
+    }
+    return 0;
 }
