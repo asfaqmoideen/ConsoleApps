@@ -19,6 +19,7 @@ int executeMainMenu(int);
 void addProduct();
 void displayProducts();
 void removeProduct();
+void updateProduct();
 int findProduct(char[100]);
 
 int main() {
@@ -62,6 +63,7 @@ int executeMainMenu(int option) {
             removeProduct();
             break;
         case 4: 
+            updateProduct();
             break;
         case 0:
             return 1;
@@ -115,17 +117,28 @@ void displayProducts() {
     }
 }
 
-void removeProduct(){
-
+void removeProduct() {
     char productName[100];
     printf("Enter Product Name to remove: ");
     scanf("%s", productName);
     int pos = findProduct(productName);
 
-    for(int i=pos; i<sizeof(products); i++){
-        products[i] = products[i+1];
+    if (pos == -1) {
+        printf("Product not found.\n");
+        return;
     }
+
+    // Shift elements to the left to remove the product
+    for (int i = pos; i < productId - 1; i++) {
+        products[i] = products[i + 1];
+    }
+
+    // Decrement productId since one product is removed
+    productId--;
+
+    printf("Product '%s' removed successfully.\n", productName);
 }
+
 
 int findProduct(char productName[100]){
     for(int i =0; i< productId; i++){
@@ -133,5 +146,27 @@ int findProduct(char productName[100]){
             return i;
         }
     }
-    return 0;
+
+    printf("Product not Found");
+    return -1;
+}
+
+void updateProduct() {
+    char productName[100];
+    printf("Enter Product Name to update: ");
+    scanf("%s", productName);
+    int pos = findProduct(productName);
+
+    if (pos == -1) {
+        printf("Product not found.\n");
+        return;
+    }
+
+    float productPrice;
+    printf("Enter new price for %s: ", productName);
+    scanf("%f", &productPrice);
+
+    products[pos].productPrice = productPrice;
+
+    printf("Product '%s' updated successfully.\n", productName);
 }
