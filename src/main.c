@@ -134,7 +134,7 @@ void removeProduct() {
     }
 
     // Decrement productId since one product is removed
-    productId--;
+   // productId--;
 
     printf("Product '%s' removed successfully.\n", productName);
 }
