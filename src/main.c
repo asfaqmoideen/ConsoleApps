@@ -5,6 +5,8 @@
 #define MAX_PRODUCTS 100 // Maximum number of products
 
 struct Product* head = NULL;
+
+/// @brief Structure which holds the product entities and next node address
 struct Product {
     int productId;
     char productName[100];
@@ -29,15 +31,16 @@ int main() {
 
     while (!exitFlag) {
         displayMainMenu();
-        int option = getOptionFromTheUser();
+        int option;
+        scanf("%d", &option);
         exitFlag = executeMainMenu(option);
     }
 
     printf("\nExiting the application...");
-   // free(products); // Free dynamically allocated memory
     return 0;
 }
 
+/// @brief Prints the main menu options in the console
 void displayMainMenu() {
     printf(" --- Welcome to Product Inventory Manager");
     printf("\n1. View all products");
@@ -48,12 +51,9 @@ void displayMainMenu() {
     printf("\nEnter an option to proceed: ");
 }
 
-int getOptionFromTheUser() {
-    int option;
-    scanf("%d", &option);
-    return option;
-}
-
+/// @brief Exexutes the user specified operation 
+/// @param option option as integer
+/// @return exit value 1 if the exit key is presses otherwise returns 0
 int executeMainMenu(int option) {
     switch (option) {
         case 1:
@@ -77,6 +77,7 @@ int executeMainMenu(int option) {
     return 0;
 }
 
+/// @brief Adds product to the linked list as node, creates one if head is NULL
 void addProduct() {
     productId++;
 
@@ -103,6 +104,7 @@ void addProduct() {
     printf("The Product %s with Price %.2f has been successfully Added with ID: %d\n", temp->productName, temp->productPrice, temp->productId);
 }
 
+/// @brief Prints all the Products in the Console
 void displayProducts() {
     if (head == NULL) {
         printf("No products were added yet\n");
@@ -121,6 +123,7 @@ void displayProducts() {
     }
 }
 
+/// @brief Gets product name to remove and delete the specified node
 void removeProduct() {
     char productName[100];
     printf("Enter Product Name to remove: ");
@@ -151,6 +154,9 @@ void removeProduct() {
 }
 
 
+/// @brief Traverses along the linked list to find the Product
+/// @param productName Product name as input
+/// @return The id if found and 0 if not found
 int findProduct(char productName[100]){
 
     struct Product *ptr = head;
@@ -161,14 +167,13 @@ int findProduct(char productName[100]){
 
     for(int i =0; ptr->next !=NULL; i++){
         if(!strcmp(ptr->productName, productName)){
-            return i;
+            printf("Product not Found with Id :%d", ptr->productId);
+            return i ;
         }
-    }
-
-    printf("Product not Found");
-    return -1;
+    } 
 }
 
+/// @brief Gets user input and updates in the node 
 void updateProduct() {
 
     struct Product* ptr = head;
