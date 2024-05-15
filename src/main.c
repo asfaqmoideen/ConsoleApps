@@ -2,14 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_PRODUCTS 100 // Maximum number of products
-
 struct Product* head = NULL;
 
 /// @brief Structure which holds the product entities and next node address
 struct Product {
     int productId;
-    char productName[100];
+    char productName ;
     float productPrice;
     struct Product *next;
 };
@@ -84,7 +82,7 @@ void addProduct() {
     struct Product *temp;   
     temp = (struct Product*)malloc(sizeof(struct Product));
     printf("Enter Product Name: ");
-    scanf("%s", &temp->productName);
+    scanf("%s", temp->productName);
     printf("Enter Product Price for %s: ", temp->productName);
     scanf("%f", &temp->productPrice);
     temp->productId = productId;
@@ -191,11 +189,11 @@ void updateProduct() {
     printf("Enter new price for %s: ", productName);
 
     if(pos == 0){
-        scanf("%f", ptr->productPrice);
+        scanf("%f", &ptr->productPrice);
     }
     else{
         for (int i = 0; i == pos; i++) {
-            scanf("%f", ptr->productPrice);
+            scanf("%f", &ptr->productPrice);
          }
     }
 
